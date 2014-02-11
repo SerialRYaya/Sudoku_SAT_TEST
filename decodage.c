@@ -3,7 +3,7 @@
 
 void appel_sat4j(){
 
-    system("java -jar sat4j-sat.jar pbcnf.cnf > patate2.txt" ); // initialement "start batch.bat" appel avec test1.cnf en paramËtre et Ècriture dans patate2.txt
+    system("java -jar sat4j-sat.jar pbsat.cnf > patate2.txt" ); // initialement "start batch.bat" appel avec test1.cnf en param√®tre et √©criture dans patate2.txt
     }
 
 
@@ -60,3 +60,4 @@ void resoudre(Grille G,int dimension) {
 void lecture_resultat_sat4j(const char *solution){
 
 }
+
