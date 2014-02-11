@@ -3,7 +3,7 @@
 
 void appel_sat4j(){
 
-    system("start batch.bat" ); // " java -jar sat4j-sat.jar test1.cnf > patate2.txt " appel avec test1.cnf en paramètre et écriture dans patate2.txt
+    system("java -jar sat4j-sat.jar pbcnf.cnf > patate2.txt" ); // initialement "start batch.bat" appel avec test1.cnf en paramètre et écriture dans patate2.txt
     }
 
 
