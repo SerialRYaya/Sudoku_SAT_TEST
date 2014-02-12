@@ -43,7 +43,7 @@ char *resolution_sat4j(){
         }
     solution=decoupage_sat4j(decode);
     if (solution=="IMPOSSIBLE"){
-        printf("Il n'existe pas de solution a ce probleme .");
+        printf("Il n'existe pas de solution a ce probleme.\n");
         return 0;
     }
     fclose(decode);
@@ -51,11 +51,6 @@ char *resolution_sat4j(){
     return solution;
 }
 
-void resoudre(Grille G,int dimension) {
-    generer_sat_grille(G,dimension);
-    sat_jeu(dimension);
-    resolution_sat4j();
-}
 
 void lecture_resultat_sat4j(const char *solution){
 

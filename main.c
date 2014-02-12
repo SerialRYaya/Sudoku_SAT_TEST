@@ -14,7 +14,7 @@
 
 
 
-int main(int argc, char** argv) {
+void main(int argc, char** argv) {
 
     printf("############################################################\n");
     printf("###################    SUDOKU AVEC SAT    ##################\n");
@@ -32,7 +32,5 @@ int main(int argc, char** argv) {
     G = creer_grille(dimension);
     raz_grille(G, dimension);
     saisir_grille(G, dimension);
-    resoudre(G,dimension);
-    return 0;
 }
 

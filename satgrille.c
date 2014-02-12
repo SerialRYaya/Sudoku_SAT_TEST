@@ -1,22 +1,11 @@
 #include "satgrille.h"
 
-void creer_cnf() {
-    FILE * f = NULL;
-    f = fopen("pbsat.cnf", "w");
-    fputs("entete_cnf_a_remplacer_le_residu_sera_un_commentaire\n",f); // 53 caractères en comptant le retour chariot (voir fonction entete_cnf())
-    fclose(f);
+void generer_sat_grille(Grille G,int dimension,int *compteur_clauses_grille) {
+    generer_sat_grille_au_moins(dimension,compteur_clauses_grille);
+    generer_sat_grille_au_plus(dimension,compteur_clauses_grille);
 }
 
-void generer_sat_grille(Grille G,int dimension) {
-    creer_cnf();
-    int compteur_clauses = 0;
-    generer_sat_grille_au_moins(dimension,&compteur_clauses);
-    generer_sat_grille_au_plus(dimension,&compteur_clauses);
-    generer_sat_saisies(G,dimension,&compteur_clauses);
-    entete_cnf(dimension,compteur_clauses);
-}
-
-void generer_sat_grille_au_moins(int dimension,int *compteur_clauses) {
+void generer_sat_grille_au_moins(int dimension,int *compteur_clauses_grille) {
     FILE * f = NULL;
     char variable[4];
     f = fopen("pbsat.cnf", "a");
@@ -28,13 +17,13 @@ void generer_sat_grille_au_moins(int dimension,int *compteur_clauses) {
 		fputs(variable, f);
 	    }
 	    fputs("0 \n", f);
-            (*compteur_clauses)++;
+            (*compteur_clauses_grille)++;
 	}
     }
     fclose(f);
 }
 
-void generer_sat_grille_au_plus(int dimension,int *compteur_clauses) {
+void generer_sat_grille_au_plus(int dimension,int *compteur_clauses_grille) {
     int i = 0, j = 0, k = 0, l = k + 1;
     FILE * f = NULL;
     f = fopen("pbsat.cnf", "a");
@@ -48,7 +37,7 @@ void generer_sat_grille_au_plus(int dimension,int *compteur_clauses) {
 		    fputs(variable1, f);
 		    sprintf(variable2, "-%i%i%i 0\n", i + 1, j + 1, l + 1);
 		    fputs(variable2, f);
-                    (*compteur_clauses)++;
+                    (*compteur_clauses_grille)++;
 		}
 	    }
 	}
@@ -56,7 +45,7 @@ void generer_sat_grille_au_plus(int dimension,int *compteur_clauses) {
     fclose(f);
 }
 
-void generer_sat_saisies(Grille G, int dimension,int *compteur_clauses) {
+void generer_sat_saisies(Grille G, int dimension,int *compteur_clauses_saisies) {
     FILE * f = NULL;
     f = fopen("pbsat.cnf", "a");
     int i, j, k;
@@ -68,26 +57,13 @@ void generer_sat_saisies(Grille G, int dimension,int *compteur_clauses) {
 		k = G[i][j];
 		sprintf(clause, "%i%i%i 0\n", i+1, j+1, k);
 		fputs(clause, f);
-                (*compteur_clauses)++;
+                (*compteur_clauses_saisies)++;
 	    }
 	}
     }
     fclose(f);
 }
 
-int nbvariables(int dimension) {
-    int nombre_variables = dimension * dimension * dimension;
-    return nombre_variables;
-}
 
-void entete_cnf(int dimension,int compteur_clauses) {
-    int nombre_variables;
-    nombre_variables = nbvariables(dimension) ;
-    FILE * f = NULL;
-    f = fopen("pbsat.cnf", "r+");
-    rewind(f);
-    char entete[30];
-    sprintf(entete,"p cnf %i %i\nc ",nombre_variables,compteur_clauses); // "c " en fin de chaine pour que ce qui reste de la chaîne remplacée devienne un commentaire. voir "creer_cnf()"
-    fputs(entete, f);
-    fclose(f);
-}
+
+

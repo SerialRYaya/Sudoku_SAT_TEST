@@ -1,13 +1,19 @@
 #include "regles.h"
 
-void sat_jeu(int taille) {
-    ligne_grille(taille);
-    colonne_grille(taille);
-    carre_grille(taille);
+void sat_jeu(int taille, int *compteur_clauses_jeu) {
+    int compteur_clauses_lignes = 0;
+    int compteur_clauses_colonnes = 0;
+    int compteur_clauses_carres = 0;
+    
+    ligne_grille(taille,&compteur_clauses_lignes);
+    colonne_grille(taille,&compteur_clauses_colonnes);
+    carre_grille(taille,&compteur_clauses_carres);
+    
+    *compteur_clauses_jeu = compteur_clauses_lignes + compteur_clauses_colonnes + compteur_clauses_carres;
 }
 
 // Règle sur ligne pour grille de taille n
-void ligne_grille(int taille){
+void ligne_grille(int taille, int *compteur_clauses_lignes){
     FILE *f = NULL;
     f=fopen("pbsat.cnf","a");
     int i,j,k,m;
@@ -21,11 +27,13 @@ void ligne_grille(int taille){
             }
             sprintf(t,"0\n");
             fputs(t,f);
+	    (*compteur_clauses_lignes)++;
             for(j=1;j<=taille;j++){
                 for(m=1;m<=taille;m++){
                     if(m!=j){
                         sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
                         fputs(t,f);
+			(*compteur_clauses_lignes)++;
                     }
                 }
             }
@@ -35,108 +43,9 @@ void ligne_grille(int taille){
     fclose(f);
     return;
 }
-
-
-
-
-
-
-
-// Règle sur ligne pour grille de taille 4
-void ligne_grille_4(void){
-    int i,j,k,m;
-    char t[20]="";
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    for(i=1;i<=4;i++){
-        for(k=1;k<=4;k++){
-            for(j=1;j<=4;j++){
-                sprintf(t,"%d%d%d ",i,j,k);
-                fputs(t,f);
-            }
-            sprintf(t,"0\n");
-            fputs(t,f);
-            for(j=1;j<=4;j++){
-                for(m=1;m<=4;m++){
-                    if(m!=j){
-                        sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
-                        fputs(t,f);
-                    }
-                }
-            }
-        }
-    }
-    fclose(f);
-    return;
-}
-
-
-
-
-
-
-
-// Règle sur ligne pour grille de taille 9
-void ligne_grille_9(void){
-    int i,j,k,m;
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    char t[20]="";
-
-    for(i=1;i<=9;i++){
-        for(k=1;k<=2;k++){
-                for(j=1;j<=9;j++){
-                    sprintf(t,"%d%d%d ",i,j,k);
-                    fputs(t,f);
-                }
-                sprintf(t,"0\n");
-                fputs(t,f);
-                for(j=1;j<=9;j++){
-                    for(m=1;m<=9;m++){
-                        if(m!=j){
-                            sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
-                            fputs(t,f);
-                        }
-                    }
-                }
-        }
-    }
-    fclose(f);
-    return;
-}
-
-// Règle sur colonne pour grille de taille 4
-void colonne_grille_4(void){
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    char t[20]="";
-    int i,j,k,m;
-
-    for(j=1;j<=4;j++){
-        for(k=1;k<=4;k++){
-                for(i=1;i<=4;i++){
-                    sprintf(t,"%d%d%d ",i,j,k);
-                    fputs(t,f);
-                }
-                sprintf(t,"0\n");
-                fputs(t,f);
-                for(i=1;i<=4;i++){
-                    for(m=1;m<=4;m++){
-                        if(m!=j){
-                            sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
-                            fputs(t,f);
-                        }
-                    }
-                }
-        }
-    }
-    fclose(f);
-    return;
-}
-
 
 // Règle sur colonne pour grille de taille n
-void colonne_grille(int taille){
+void colonne_grille(int taille,int *compteur_clauses_colonnes){
     FILE *f=NULL;
     f=fopen("pbsat.cnf","a");
     char t[20]="";
@@ -150,11 +59,13 @@ void colonne_grille(int taille){
                 }
                 sprintf(t,"0\n");
                 fputs(t,f);
+		(*compteur_clauses_colonnes)++;
                 for(i=1;i<=taille;i++){
                     for(m=1;m<=taille;m++){
                         if(m!=j){
                             sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
                             fputs(t,f);
+			    (*compteur_clauses_colonnes)++;
                         }
                     }
                 }
@@ -163,42 +74,9 @@ void colonne_grille(int taille){
     fclose(f);
     return;
 }
-
-
-
-
-// Règle sur colonne pour grille de taille 9
-void colonne_grille_9(void){
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    char t[20]="";
-    int i,j,k,m;
-
-    for(j=1;j<=9;j++){
-        for(k=1;k<=9;k++){
-                for(i=1;i<=9;i++){
-                    sprintf(t,"%d%d%d ",i,j,k);
-                    fputs(t,f);
-                }
-                sprintf(t,"0\n");
-                fputs(t,f);
-                for(i=1;i<=9;i++){
-                    for(m=1;m<=9;m++){
-                        if(m!=j){
-                            sprintf(t,"-%d%d%d -%d%d%d 0\n",i,j,k,i,m,k);
-                            fputs(t,f);
-                        }
-                    }
-                }
-        }
-    }
-    fclose(f);
-    return;
-}
-
 
 // Règle sur carré pour grille de taille n
-void carre_grille(int taille){
+void carre_grille(int taille,int *compteur_clauses_carres){
     FILE *f=NULL;
     f=fopen("pbsat.cnf","a");
     char t[20]="";
@@ -216,6 +94,7 @@ void carre_grille(int taille){
                 }
                 sprintf(t,"0\n");
                 fputs(t,f);
+		(*compteur_clauses_carres)++;
                 for(i1=i;i1<i+d;i1++){
                     for(m=i;m<i+d;m++){
                         if(m!=i1){
@@ -224,6 +103,7 @@ void carre_grille(int taille){
                                     if(n!=j1){
                                         sprintf(t,"-%d%d%d -%d%d%d 0\n",i1,j1,k,m,n,k);
                                         fputs(t,f);
+					(*compteur_clauses_carres)++;
                                     }
                                 }
                             }
@@ -237,84 +117,4 @@ void carre_grille(int taille){
     return;
 }
 
-
-// Règle sur carré pour grille de taille 4
-void carre_grille_4(void){
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    char t[20]="";
-    int i,j,k,i1,j1,m,n;
-
-
-    for(k=1;k<=4;k++){
-        for(i=1;i<=3;i=i+2){
-            for(j=1;j<=3;j=j+2){
-                for(i1=i;i1<i+2;i1++){
-                    for(j1=j;j1<j+2;j1++){
-                        sprintf(t,"%d%d%d ",i1,j1,k);
-                        fputs(t,f);
-                    }
-                }
-                sprintf(t,"0\n");
-                fputs(t,f);
-                for(i1=i;i1<i+2;i1++){
-                    for(m=i;m<i+2;m++){
-                        if(m!=i1){
-                            for(j1=j;j1<j+2;j1++){
-                                for(n=j;n<j+2;n++){
-                                    if(n!=j1){
-                                        sprintf(t,"-%d%d%d -%d%d%d 0\n",i1,j1,k,m,n,k);
-                                        fputs(t,f);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    fclose(f);
-    return;
-}
-
-
-// Règle sur carré pour grille de taille 9
-void carre_grille_9(void){
-    FILE *f=NULL;
-    f=fopen("pbsat.cnf","a");
-    char  t[20]="";
-    int i,j,k,i1,j1,m,n;
-
-    for(k=1;k<=9;k++){
-        for(i=1;i<=7;i=i+3){
-            for(j=1;j<=7;j=j+3){
-                for(i1=i;i1<i+3;i1++){
-                    for(j1=j;j1<j+3;j1++){
-                        sprintf(t,"%d%d%d ",i1,j1,k);
-                        fputs(t,f);
-                    }
-                }
-                sprintf(t,"0\n");
-                fputs(t,f);
-                for(i1=i;i1<i+3;i1++){
-                    for(m=i;m<i+3;m++){
-                        if(m!=i1){
-                            for(j1=j;j1<j+3;j1++){
-                                for(n=j;n<j+3;n++){
-                                    if(n!=j1){
-                                        sprintf(t,"-%d%d%d -%d%d%d 0\n",i1,j1,k,m,n,k);
-                                        fputs(t,f);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    fclose(f);
-    return;
-}
 

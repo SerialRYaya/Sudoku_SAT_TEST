@@ -112,7 +112,7 @@ void saisir_grille(Grille G, int dimension) {
 		remplir_tableau(G, dimension);
 		break;
 	    case 2:
-		resoudre(G, dimension);
+		generer_sat(G, dimension);
 		break;
 	    case 3:
 		raz_grille(G, dimension);
